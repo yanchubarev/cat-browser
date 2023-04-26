@@ -41,7 +41,6 @@ export default defineComponent({
     // Check if the query already have a breed id
     if (route.query.breedId) {
       selectedBreed.value = route.query.breedId as string;
-      emit("selectChange", selectedBreed.value);
     }
 
     return {

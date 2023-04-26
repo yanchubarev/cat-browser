@@ -23,11 +23,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-.cat-home-page__list__item {
-  width: 25%;
-  padding-right: 10px;
-  padding-left: 10px;
-  margin-bottom: 20px;
+.cat-home-page__list__item__wrap {
+  margin-bottom: 30px;
 
   img {
     width: 100%;

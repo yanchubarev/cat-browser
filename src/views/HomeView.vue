@@ -2,12 +2,19 @@
   <div id="cat-home-page" class="container cat-home-page">
     <h1>Cat browser</h1>
     <cat-breed-select :breeds="breeds" v-on:selectChange="handleSelectChange" />
-
-    <div v-if="selectedBreed">
+    <loader v-if="isLoading" />
+    <div v-if="selectedBreed && !isLoading">
       <cats-list :cat-items="items" />
     </div>
-    <div v-if="items.length < totalImages" class="cat-home-page__loadmore">
-      <button type="button" class="btn btn-primary" @click="fetchImages(true)">
+    <div
+      v-if="items.length < totalImages && !isLoading"
+      class="cat-home-page__loadmore"
+    >
+      <button
+        type="button"
+        class="btn btn-primary"
+        @click="fetchCatItems(true)"
+      >
         Load more
       </button>
     </div>
@@ -15,13 +22,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect } from "vue";
-import { CatService } from "@/services/CatService";
-import { CatBreed, CatImage } from "@/types/cat";
+import { computed, defineComponent, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import CatsList from "@/components/cat/CatsList.vue";
 import CatBreedSelect from "@/components/cat/CatBreedSelect.vue";
+import Loader from "@/components/uiElements/Loader.vue";
+import { useStore } from "vuex";
+import { useRoute } from "vue-router";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -30,51 +38,42 @@ export default defineComponent({
   components: {
     CatsList,
     CatBreedSelect,
+    Loader,
   },
   setup() {
-    const breeds = ref<CatBreed[]>([]);
-    let selectedBreed = ref<string>("");
-    const items = ref<CatImage[]>([]);
-    const totalImages = ref<number>(0);
-    const limitPerPage = ref<number>(ITEMS_PER_PAGE);
-    const page = ref<number>(0);
+    const store = useStore();
+    const breeds = computed(() => store.getters.breeds);
+    const selectedBreed = computed(() => store.getters.selectedBreed);
+    const items = computed(() => store.getters.items);
+    const totalImages = computed(() => store.getters.totalImages);
+    const isLoading = computed(() => store.getters.isLoading);
     const router = useRouter();
     const toast = useToast();
-    const catService = new CatService();
+    const limitPerPage = ITEMS_PER_PAGE;
+    const route = useRoute();
 
-    // Fetch cat images based on the selected breed and update the page
-    // isLoadMore is used as a flag to load more images from one breed
-    const fetchImages = async (isLoadMore = false) => {
-      if (!isLoadMore) {
-        page.value = 0;
-        items.value = [];
-      }
-      try {
-        const result = await catService.getCatItems(
-          selectedBreed.value,
-          page.value,
-          limitPerPage.value
-        );
-        items.value = isLoadMore
-          ? items.value.concat(result.items)
-          : [...items.value, ...result.items];
-        totalImages.value = result.totalImages;
-        page.value++;
-        await router.push({ query: { breedId: selectedBreed.value } });
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          toast.error(error.message);
-        } else {
-          toast.error("Unknown error occurred");
-        }
-      }
+    const fetchCatItems = async (isLoadMore = false) => {
+      await store.dispatch("fetchCatItems", {
+        isLoadMore,
+        selectedBreedId: selectedBreed.value,
+        page: Math.floor(items.value.length / ITEMS_PER_PAGE) + 1,
+        limit: limitPerPage,
+      });
+      await router.push({ query: { breedId: selectedBreed.value } });
     };
 
-    // Method to fetch the list of cat breeds
+    const handleSelectChange = (selectedBreedId: string) => {
+      store.dispatch("selectBreed", selectedBreedId);
+      fetchCatItems();
+    };
+
+    if (route.query.breedId !== selectedBreed.value) {
+      handleSelectChange(route.query.breedId as string);
+    }
+
     const fetchBreeds = async () => {
       try {
-        const result = await catService.getBreeds();
-        breeds.value = result;
+        await store.dispatch("fetchBreeds");
       } catch (error) {
         if (error instanceof Error) {
           toast.error(error.message);
@@ -84,21 +83,19 @@ export default defineComponent({
       }
     };
 
-    // Fetch the list of cat breeds on component load
-    watchEffect(fetchBreeds);
-
-    // Handle the breed selection change to fetch new images
-    const handleSelectChange = (selectedBreedId: string) => {
-      selectedBreed.value = selectedBreedId;
-      fetchImages();
-    };
+    watchEffect(() => {
+      if (!breeds.value.length) {
+        fetchBreeds();
+      }
+    });
 
     return {
       breeds,
       selectedBreed,
       items,
       totalImages,
-      fetchImages,
+      isLoading,
+      fetchCatItems,
       handleSelectChange,
     };
   },

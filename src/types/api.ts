@@ -1,3 +1,5 @@
+import { CatInfo } from "@/types/cat";
+
 export interface CatImageResponse {
   id?: string;
   url: string;
@@ -6,5 +8,5 @@ export interface CatImageResponse {
 export interface CatInfoResponse {
   id?: string;
   url: string;
-  breeds: any[];
+  breeds: CatInfo[];
 }

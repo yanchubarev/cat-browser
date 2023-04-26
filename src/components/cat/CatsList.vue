@@ -1,11 +1,13 @@
 <template>
   <div class="cat-home-page__list" v-if="catItems">
-    <div
-      v-for="(item, index) in catItems"
-      :key="index"
-      class="cat-home-page__list__item"
-    >
-      <cat-teaser :cat="item" />
+    <div class="row">
+      <div
+        v-for="(item, index) in catItems"
+        :key="index"
+        class="col-lg-3 col-md-6 col-xs-12"
+      >
+        <cat-teaser :cat="item" />
+      </div>
     </div>
   </div>
   <div v-else>Sorry! Nothing to show :(</div>

@@ -13,13 +13,5 @@
   div {
     box-sizing: border-box;
   }
-
-  .container {
-    max-width: 1320px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 20px;
-    padding-right: 20px;
-  }
 }
 </style>

@@ -4,7 +4,7 @@
       <div
         v-for="(item, index) in catItems"
         :key="index"
-        class="col-lg-3 col-md-6 col-xs-12"
+        class="col-lg-3 col-md-6 col-xs-12 cat-home-page__list__item"
       >
         <cat-teaser :cat="item" />
       </div>
@@ -31,12 +31,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss">
-.cat-home-page__list {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: -10px;
-  margin-right: -10px;
-}
-</style>

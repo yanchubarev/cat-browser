@@ -15,7 +15,7 @@ export class CatService {
       );
       return response.data;
     } catch (error) {
-      throw new Error("Error while loading breeds");
+      throw new Error();
     }
   }
 
@@ -40,9 +40,7 @@ export class CatService {
       const totalImages = parseInt(response.headers["pagination-count"]) || 0;
       return { items, totalImages };
     } catch (error) {
-      throw new Error(
-        "Apologies but we could not load new cats for you at this time! Miau!"
-      );
+      throw new Error();
     }
   }
 
@@ -65,7 +63,7 @@ export class CatService {
         image: response.data.url,
       };
     } catch (error) {
-      throw new Error("Error while loading breed information");
+      throw new Error();
     }
   }
 }

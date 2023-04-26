@@ -1,23 +1,11 @@
 import { CatService } from "@/services/CatService";
 import { CatBreed, CatImage, CatInfo } from "@/types/cat";
 import { Commit } from "vuex";
+import { CatBrowserState } from "@/store/modules/cat/types";
 
 const catService = new CatService();
 
-export interface CatBrowserState {
-  breeds: CatBreed[];
-  selectedBreed: string;
-  items: CatImage[];
-  totalImages: number;
-  isLoading: boolean;
-  page: number;
-  limitPerPage: number;
-  loadedCatItem: CatInfo | null;
-}
-
-export interface RootState {
-  cat: CatBrowserState;
-}
+const ITEMS_PER_PAGE = 5;
 
 export const catModule = {
   state: (): CatBrowserState => ({
@@ -26,7 +14,7 @@ export const catModule = {
     items: [],
     totalImages: 0,
     isLoading: false,
-    limitPerPage: 5,
+    limitPerPage: ITEMS_PER_PAGE,
     page: 0,
     loadedCatItem: null,
   }),
@@ -61,7 +49,7 @@ export const catModule = {
         const breeds = await catService.getAllBreeds();
         commit("SET_BREEDS", breeds);
       } catch (error) {
-        console.error(error);
+        throw new Error("Error while loading breeds");
       } finally {
         commit("SET_LOADING", false);
       }
@@ -89,7 +77,9 @@ export const catModule = {
         commit("SET_TOTAL_IMAGES", result.totalImages);
         commit("SET_PAGE", state.page + 1);
       } catch (error) {
-        console.error(error);
+        throw new Error(
+          "Apologies but we could not load new cats for you at this time! Miau!"
+        );
       } finally {
         commit("SET_LOADING", false);
       }
@@ -103,7 +93,7 @@ export const catModule = {
         const catInfo = await catService.getCatById(catId);
         commit("SET_LOADED_CAT_ITEM", catInfo);
       } catch (error) {
-        console.error(error);
+        throw new Error("Error while loading breed information");
       } finally {
         commit("SET_LOADING", false);
       }

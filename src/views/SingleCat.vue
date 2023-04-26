@@ -1,5 +1,6 @@
 <template>
-  <div v-if="cat">
+  <loader v-if="isLoading" />
+  <div v-if="cat && !isLoading">
     <CatInfoPanel :cat="cat" />
   </div>
 </template>
@@ -10,17 +11,20 @@ import { useRoute } from "vue-router";
 import CatInfoPanel from "@/components/cat/CatInfoPanel.vue";
 import { useToast } from "vue-toastification";
 import { useStore } from "vuex";
+import Loader from "@/components/uiElements/Loader.vue";
 
 export default defineComponent({
   name: "SingleCat",
   components: {
     CatInfoPanel,
+    Loader,
   },
   setup() {
     const store = useStore();
     const route = useRoute();
     const cat = computed(() => store.getters.loadedCatItem);
     const toast = useToast();
+    const isLoading = computed(() => store.getters.isLoading);
 
     // Fetch the cat info
     const getCatInfo = async () => {
@@ -45,7 +49,7 @@ export default defineComponent({
       getCatInfo();
     });
 
-    return { cat };
+    return { cat, isLoading };
   },
 });
 </script>

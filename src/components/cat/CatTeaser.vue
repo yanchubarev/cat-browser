@@ -1,6 +1,12 @@
 <template>
-  <div class="cat-home-page__list__item__wrap">
-    <img :src="cat.image" alt="cat image" />
+  <div class="cat-home-page__list__item__wrap mb-4">
+    <img
+      class="mb-3"
+      width="311"
+      height="200"
+      :src="catOptimisedImageUrl"
+      alt="cat image"
+    />
     <router-link :to="{ name: 'singleCat', params: { breedId: cat.id } }">
       <button type="button" class="btn btn-outline-info">View details</button>
     </router-link>
@@ -8,8 +14,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { computed, defineComponent, PropType, ref } from "vue";
 import { CatImage } from "@/types/cat";
+import spinner from "@/assets/spinner/spinner.gif";
 
 export default defineComponent({
   name: "CatsTeaser",
@@ -19,18 +26,33 @@ export default defineComponent({
       required: true,
     },
   },
+  setup(props) {
+    const catImageElement: HTMLImageElement = new Image();
+    const catOptimisedImageUrl = ref<string>(spinner);
+    const catImageUrl = computed(() => props.cat.image);
+
+    catImageElement.src = catImageUrl.value;
+
+    catImageElement.onload = () => {
+      catOptimisedImageUrl.value = catImageElement.src;
+    };
+
+    return {
+      catOptimisedImageUrl,
+    };
+  },
 });
 </script>
 
 <style lang="scss">
 .cat-home-page__list__item__wrap {
-  margin-bottom: 30px;
-
   img {
     width: 100%;
-    object-fit: fill;
+    object-fit: cover;
     height: 200px;
-    margin-bottom: 20px;
+    @media (max-width: 576px) {
+      height: auto;
+    }
   }
 }
 </style>

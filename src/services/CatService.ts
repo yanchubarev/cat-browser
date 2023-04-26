@@ -54,14 +54,16 @@ export class CatService {
       const response: AxiosResponse<CatInfoResponse> = await axios.get(
         `${BASE_URL}/images/${id}`
       );
+      const breedInfo = response.data.breeds[0];
+
       // Extract the relevant information from the response and return it
       return {
         id: response.data.id,
-        origin: response.data.breeds[0].origin,
-        name: response.data.breeds[0].name,
-        temperament: response.data.breeds[0].temperament,
-        description: response.data.breeds[0].description,
-        breed: response.data.breeds[0].id,
+        origin: breedInfo.origin,
+        name: breedInfo.name,
+        temperament: breedInfo.temperament,
+        description: breedInfo.description,
+        breed: breedInfo.id,
         image: response.data.url,
       };
     } catch (error) {

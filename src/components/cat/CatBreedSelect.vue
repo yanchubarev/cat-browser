@@ -1,8 +1,12 @@
 <template>
   <div>
     <div class="cat-home-page__select-wrap" v-if="breeds">
-      <span>Choose the breed: </span>
-      <select v-model="selectedBreed" @change="onSelectChange">
+      <p>Choose the breed:</p>
+      <select
+        class="form-select"
+        v-model="selectedBreed"
+        @change="onSelectChange"
+      >
         <option value="">Select a breed</option>
         <option v-for="breed in breeds" :key="breed.id" :value="breed.id">
           {{ breed.name }}
@@ -52,9 +56,5 @@ export default defineComponent({
 .cat-home-page__select-wrap {
   text-align: left;
   margin-bottom: 20px;
-  select {
-    width: 200px;
-    height: 40px;
-  }
 }
 </style>

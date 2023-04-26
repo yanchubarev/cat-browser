@@ -2,7 +2,7 @@
   <div class="cat-home-page__list__item__wrap">
     <img :src="cat.image" alt="cat image" />
     <router-link :to="{ name: 'singleCat', params: { breedId: cat.id } }">
-      View details
+      <button type="button" class="btn btn-outline-info">View details</button>
     </router-link>
   </div>
 </template>
@@ -33,6 +33,7 @@ export default defineComponent({
     width: 100%;
     object-fit: fill;
     height: 200px;
+    margin-bottom: 20px;
   }
 }
 </style>

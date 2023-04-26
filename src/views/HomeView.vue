@@ -1,12 +1,15 @@
 <template>
   <div id="cat-home-page" class="container cat-home-page">
+    <h1>Cat browser</h1>
     <cat-breed-select :breeds="breeds" v-on:selectChange="handleSelectChange" />
 
     <div v-if="selectedBreed">
       <cats-list :cat-items="items" />
     </div>
     <div v-if="items.length < totalImages" class="cat-home-page__loadmore">
-      <button @click="loadMore">Load more</button>
+      <button type="button" class="btn btn-primary" @click="fetchImages(true)">
+        Load more
+      </button>
     </div>
   </div>
 </template>
@@ -40,16 +43,21 @@ export default defineComponent({
     const catService = new CatService();
 
     // Fetch cat images based on the selected breed and update the page
-    const fetchImages = async () => {
-      page.value = 0;
-      items.value = [];
+    // isLoadMore is used as a flag to load more images from one breed
+    const fetchImages = async (isLoadMore = false) => {
+      if (!isLoadMore) {
+        page.value = 0;
+        items.value = [];
+      }
       try {
         const result = await catService.getCatItems(
           selectedBreed.value,
           page.value,
           limitPerPage.value
         );
-        items.value = [...items.value, ...result.items];
+        items.value = isLoadMore
+          ? items.value.concat(result.items)
+          : [...items.value, ...result.items];
         totalImages.value = result.totalImages;
         page.value++;
         await router.push({ query: { breedId: selectedBreed.value } });
@@ -62,30 +70,8 @@ export default defineComponent({
       }
     };
 
-    // Fetch more cat images for the current breed
-    const loadMore = async () => {
-      if (!selectedBreed.value) {
-        return;
-      }
-      try {
-        const result = await catService.getCatItems(
-          selectedBreed.value,
-          page.value,
-          limitPerPage.value
-        );
-        items.value = items.value.concat(result.items);
-        page.value++;
-      } catch (error) {
-        if (error instanceof Error) {
-          toast.error(error.message);
-        } else {
-          toast.error("Unknown error occurred");
-        }
-      }
-    };
-
-    // Fetch the list of cat breeds on component load
-    watchEffect(async () => {
+    // Method to fetch the list of cat breeds
+    const fetchBreeds = async () => {
       try {
         const result = await catService.getBreeds();
         breeds.value = result;
@@ -96,7 +82,10 @@ export default defineComponent({
           toast.error("Unknown error occurred");
         }
       }
-    });
+    };
+
+    // Fetch the list of cat breeds on component load
+    watchEffect(fetchBreeds);
 
     // Handle the breed selection change to fetch new images
     const handleSelectChange = (selectedBreedId: string) => {
@@ -110,7 +99,6 @@ export default defineComponent({
       items,
       totalImages,
       fetchImages,
-      loadMore,
       handleSelectChange,
     };
   },

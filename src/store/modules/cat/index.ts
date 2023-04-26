@@ -1,5 +1,5 @@
 import { CatService } from "@/services/CatService";
-import { CatBreed, CatImage } from "@/types/cat";
+import { CatBreed, CatImage, CatInfo } from "@/types/cat";
 import { Commit } from "vuex";
 
 const catService = new CatService();
@@ -12,6 +12,7 @@ export interface CatBrowserState {
   isLoading: boolean;
   page: number;
   limitPerPage: number;
+  loadedCatItem: CatInfo | null;
 }
 
 export interface RootState {
@@ -27,6 +28,7 @@ export const catModule = {
     isLoading: false,
     limitPerPage: 5,
     page: 0,
+    loadedCatItem: null,
   }),
   mutations: {
     SET_BREEDS(state: CatBrowserState, breeds: CatBreed[]) {
@@ -47,6 +49,9 @@ export const catModule = {
     },
     SET_PAGE(state: CatBrowserState, page: number) {
       state.page = page;
+    },
+    SET_LOADED_CAT_ITEM(state: CatBrowserState, catItem: CatInfo | null) {
+      state.loadedCatItem = catItem;
     },
   },
   actions: {
@@ -92,6 +97,17 @@ export const catModule = {
     selectBreed({ commit }: { commit: Commit }, selectedBreedId: string) {
       commit("SET_SELECTED_BREED", selectedBreedId);
     },
+    async fetchCatById({ commit }: { commit: Commit }, catId: string) {
+      commit("SET_LOADING", true);
+      try {
+        const catInfo = await catService.getCatById(catId);
+        commit("SET_LOADED_CAT_ITEM", catInfo);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        commit("SET_LOADING", false);
+      }
+    },
   },
   getters: {
     breeds: (state: CatBrowserState) => state.breeds,
@@ -99,5 +115,6 @@ export const catModule = {
     items: (state: CatBrowserState) => state.items,
     totalImages: (state: CatBrowserState) => state.totalImages,
     isLoading: (state: CatBrowserState) => state.isLoading,
+    loadedCatItem: (state: CatBrowserState) => state.loadedCatItem,
   },
 };

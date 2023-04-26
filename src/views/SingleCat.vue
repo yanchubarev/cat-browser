@@ -5,12 +5,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { CatImage } from "@/types/cat";
-import { CatService } from "@/services/CatService";
 import CatInfoPanel from "@/components/cat/CatInfoPanel.vue";
 import { useToast } from "vue-toastification";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "SingleCat",
@@ -18,9 +17,9 @@ export default defineComponent({
     CatInfoPanel,
   },
   setup() {
+    const store = useStore();
     const route = useRoute();
-    const cat = ref<CatImage | null>(null);
-    const catService = new CatService();
+    const cat = computed(() => store.getters.loadedCatItem);
     const toast = useToast();
 
     // Fetch the cat info
@@ -28,9 +27,11 @@ export default defineComponent({
       if (!route.params.breedId) {
         return;
       }
+      if (route.params.breedId === cat.value?.id) {
+        return;
+      }
       try {
-        const result = await catService.getCatById(route.params.breedId);
-        cat.value = result;
+        await store.dispatch("fetchCatById", route.params.breedId);
       } catch (error: unknown) {
         if (error instanceof Error) {
           toast.error(error.message);

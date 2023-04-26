@@ -3,14 +3,12 @@ import { CatBreed, CatImages, CatInfo } from "@/types/cat";
 import { CatImageResponse, CatInfoResponse } from "@/types/api";
 
 const BASE_URL = "https://api.thecatapi.com/v1";
-const API_KEY =
-  "live_AcGXLFbWVBXXraqpz6Ny12RX9dC2Z19OSR7mfHvUiy4F4JsKIgWaszJXVLimajUw";
 
-axios.defaults.headers.common["x-api-key"] = API_KEY;
+axios.defaults.headers.common["x-api-key"] = process.env.VUE_APP_API_KEY;
 
 export class CatService {
   // Method to get a list of cat breeds
-  async getBreeds(): Promise<CatBreed[]> {
+  async getAllBreeds(): Promise<CatBreed[]> {
     try {
       const response: AxiosResponse<CatBreed[]> = await axios.get(
         `${BASE_URL}/breeds`

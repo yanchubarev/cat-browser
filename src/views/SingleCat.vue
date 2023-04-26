@@ -26,6 +26,7 @@ export default defineComponent({
     const catService = new CatService();
     const toast = useToast();
 
+    // Fetch the cat info
     const getCatInfo = async () => {
       if (!route.params.breedId) {
         return;

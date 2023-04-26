@@ -39,6 +39,7 @@ export default defineComponent({
     const toast = useToast();
     const catService = new CatService();
 
+    // Fetch cat images based on the selected breed and update the page
     const fetchImages = async () => {
       page.value = 0;
       items.value = [];
@@ -61,6 +62,7 @@ export default defineComponent({
       }
     };
 
+    // Fetch more cat images for the current breed
     const loadMore = async () => {
       if (!selectedBreed.value) {
         return;
@@ -82,6 +84,7 @@ export default defineComponent({
       }
     };
 
+    // Fetch the list of cat breeds on component load
     watchEffect(async () => {
       try {
         const result = await catService.getBreeds();
@@ -95,6 +98,7 @@ export default defineComponent({
       }
     });
 
+    // Handle the breed selection change to fetch new images
     const handleSelectChange = (selectedBreedId: string) => {
       selectedBreed.value = selectedBreedId;
       fetchImages();

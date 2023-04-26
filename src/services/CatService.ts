@@ -9,6 +9,7 @@ const API_KEY =
 axios.defaults.headers.common["x-api-key"] = API_KEY;
 
 export class CatService {
+  // Method to get a list of cat breeds
   async getBreeds(): Promise<CatBreed[]> {
     try {
       const response: AxiosResponse<CatBreed[]> = await axios.get(
@@ -20,6 +21,7 @@ export class CatService {
     }
   }
 
+  // Method to get a list of cat images by breed id, page number, and limit
   async getCatItems(
     breedId: string,
     page: number,
@@ -29,13 +31,15 @@ export class CatService {
       const response: AxiosResponse<CatImageResponse[]> = await axios.get(
         `${BASE_URL}/images/search?limit=${limit}&page=${page}&breed_id=${breedId}`
       );
+      // Transform the response data into a format usable by the application
       const items = response.data.map((item) => {
         return {
           id: item.id,
           image: item.url,
         };
       });
-      const totalImages = response.headers["pagination-count"] || 0;
+      // Extract the total number of images from the response headers
+      const totalImages = parseInt(response.headers["pagination-count"]) || 0;
       return { items, totalImages };
     } catch (error) {
       throw new Error(
@@ -44,11 +48,13 @@ export class CatService {
     }
   }
 
+  // Method to get information about a specific cat by ID
   async getCatById(id: string | string[]): Promise<CatInfo> {
     try {
       const response: AxiosResponse<CatInfoResponse> = await axios.get(
         `${BASE_URL}/images/${id}`
       );
+      // Extract the relevant information from the response and return it
       return {
         id: response.data.id,
         origin: response.data.breeds[0].origin,

@@ -15,7 +15,7 @@
 import { defineComponent, ref, watchEffect } from "vue";
 import { CatService } from "@/services/CatService";
 import { CatBreed, CatImage } from "@/types/cat";
-import { useRoute, useRouter } from "vue-router";
+import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import CatsList from "@/components/cat/CatsList.vue";
 import CatBreedSelect from "@/components/cat/CatBreedSelect.vue";
@@ -33,7 +33,7 @@ export default defineComponent({
     let selectedBreed = ref<string>("");
     const items = ref<CatImage[]>([]);
     const totalImages = ref<number>(0);
-    const limit = ref<number>(ITEMS_PER_PAGE);
+    const limitPerPage = ref<number>(ITEMS_PER_PAGE);
     const page = ref<number>(0);
     const router = useRouter();
     const toast = useToast();
@@ -46,7 +46,7 @@ export default defineComponent({
         const result = await catService.getCatItems(
           selectedBreed.value,
           page.value,
-          limit.value
+          limitPerPage.value
         );
         items.value = [...items.value, ...result.items];
         totalImages.value = result.totalImages;
@@ -69,7 +69,7 @@ export default defineComponent({
         const result = await catService.getCatItems(
           selectedBreed.value,
           page.value,
-          limit.value
+          limitPerPage.value
         );
         items.value = items.value.concat(result.items);
         page.value++;
@@ -118,15 +118,6 @@ export default defineComponent({
   .cat-home-page__loadmore {
     text-align: left;
     padding-top: 30px;
-    button {
-      background: #50aafd;
-      border: none;
-      width: 200px;
-      height: 40px;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 18px;
-    }
   }
 }
 </style>

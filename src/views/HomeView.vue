@@ -8,11 +8,11 @@
     </div>
     <div
       v-if="items.length < totalImages && !isLoading"
-      class="cat-home-page__loadmore"
+      class="cat-home-page__loadmore row"
     >
       <button
         type="button"
-        class="btn btn-primary"
+        class="btn btn-primary col-2"
         @click="fetchCatItems(true)"
       >
         Load more
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, watchEffect } from "vue";
+import { computed, defineComponent, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import CatsList from "@/components/cat/CatsList.vue";
@@ -53,10 +53,12 @@ export default defineComponent({
     const route = useRoute();
 
     const fetchCatItems = async (isLoadMore = false) => {
+      const nextPage: number =
+        Math.floor(items.value.length / ITEMS_PER_PAGE) + 1;
       await store.dispatch("fetchCatItems", {
         isLoadMore,
         selectedBreedId: selectedBreed.value,
-        page: Math.floor(items.value.length / ITEMS_PER_PAGE) + 1,
+        page: nextPage,
         limit: limitPerPage,
       });
       await router.push({ query: { breedId: selectedBreed.value } });
@@ -67,9 +69,20 @@ export default defineComponent({
       fetchCatItems();
     };
 
-    if (route.query.breedId !== selectedBreed.value) {
-      handleSelectChange(route.query.breedId as string);
-    }
+    watch(
+      () => route.query.breedId,
+      (breedId) => {
+        if (breedId !== selectedBreed.value) {
+          handleSelectChange(breedId as string);
+        }
+      }
+    );
+
+    onMounted(() => {
+      if (!breeds.value.length) {
+        fetchBreeds();
+      }
+    });
 
     const fetchBreeds = async () => {
       try {
@@ -82,12 +95,6 @@ export default defineComponent({
         }
       }
     };
-
-    watchEffect(() => {
-      if (!breeds.value.length) {
-        fetchBreeds();
-      }
-    });
 
     return {
       breeds,
@@ -104,6 +111,7 @@ export default defineComponent({
 
 <style lang="scss">
 #cat-home-page {
+  margin-top: 50px;
   .cat-home-page__loadmore {
     text-align: left;
     padding-top: 30px;

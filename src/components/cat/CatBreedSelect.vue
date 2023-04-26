@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="cat-home-page__select-wrap" v-if="breeds">
+    <div class="cat-home-page__select-wrap row" v-if="breeds">
       <p>Choose the breed:</p>
       <select
         class="form-select"
@@ -55,5 +55,8 @@ export default defineComponent({
 .cat-home-page__select-wrap {
   text-align: left;
   margin-bottom: 20px;
+  p {
+    padding-left: 0px;
+  }
 }
 </style>

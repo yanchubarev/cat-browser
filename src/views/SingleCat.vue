@@ -1,9 +1,9 @@
 <template>
   <div v-if="cat">
-    <CatInfoPanel :cat="cat" />
     <router-link :to="{ name: 'home', query: { breedId: cat.breed } }">
-      Back
+      <button>Back</button>
     </router-link>
+    <CatInfoPanel :cat="cat" />
   </div>
 </template>
 

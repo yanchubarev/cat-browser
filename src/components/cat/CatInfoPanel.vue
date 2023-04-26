@@ -1,5 +1,5 @@
 <template>
-  <div class="cat-info-panel">
+  <div class="cat-info-panel container">
     <h1>{{ cat.name }}</h1>
     <div class="cat-info-panel__img-holder">
       <img :src="cat.image" :alt="cat.name" />
@@ -29,3 +29,13 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+.cat-info-panel {
+  &__img-holder {
+    img {
+      width: 100%;
+    }
+  }
+}
+</style>

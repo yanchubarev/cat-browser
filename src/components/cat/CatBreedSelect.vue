@@ -1,11 +1,14 @@
 <template>
-  <div class="cat-home-page__select-wrap">
-    <select v-model="selectedBreed" @change="onSelectChange">
-      <option value="">Select a breed</option>
-      <option v-for="breed in breeds" :key="breed.id" :value="breed.id">
-        {{ breed.name }}
-      </option>
-    </select>
+  <div>
+    <div class="cat-home-page__select-wrap">
+      <span>Choose the breed: </span>
+      <select v-model="selectedBreed" @change="onSelectChange">
+        <option value="">Select a breed</option>
+        <option v-for="breed in breeds" :key="breed.id" :value="breed.id">
+          {{ breed.name }}
+        </option>
+      </select>
+    </div>
   </div>
 </template>
 
@@ -23,7 +26,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const selectedBreed = ref("");
+    const selectedBreed = ref<string>("");
     const route = useRoute();
 
     const onSelectChange = () => {

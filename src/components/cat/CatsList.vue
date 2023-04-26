@@ -35,18 +35,5 @@ export default defineComponent({
   flex-wrap: wrap;
   margin-left: -10px;
   margin-right: -10px;
-
-  &__item {
-    width: 25%;
-    padding-right: 10px;
-    padding-left: 10px;
-    margin-bottom: 20px;
-
-    img {
-      width: 100%;
-      object-fit: contain;
-      height: 200px;
-    }
-  }
 }
 </style>

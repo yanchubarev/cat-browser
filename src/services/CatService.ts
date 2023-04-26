@@ -3,8 +3,10 @@ import { CatBreed, CatImages, CatInfo } from "@/types/cat";
 import { CatImageResponse, CatInfoResponse } from "@/types/api";
 
 const BASE_URL = "https://api.thecatapi.com/v1";
-axios.defaults.headers.common["x-api-key"] =
+const API_KEY =
   "live_AcGXLFbWVBXXraqpz6Ny12RX9dC2Z19OSR7mfHvUiy4F4JsKIgWaszJXVLimajUw";
+
+axios.defaults.headers.common["x-api-key"] = API_KEY;
 
 export class CatService {
   async getBreeds(): Promise<CatBreed[]> {

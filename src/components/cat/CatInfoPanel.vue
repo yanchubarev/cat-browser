@@ -17,13 +17,13 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
-import { CatImage } from "@/types/cat";
+import { CatInfo } from "@/types/cat";
 
 export default defineComponent({
   name: "CatInfoPanel",
   props: {
     cat: {
-      type: Object as PropType<CatImage>,
+      type: Object as PropType<CatInfo>,
       required: true,
     },
   },

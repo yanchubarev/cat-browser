@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="cat-home-page__select-wrap">
+    <div class="cat-home-page__select-wrap" v-if="breeds">
       <span>Choose the breed: </span>
       <select v-model="selectedBreed" @change="onSelectChange">
         <option value="">Select a breed</option>
@@ -9,6 +9,7 @@
         </option>
       </select>
     </div>
+    <div v-else>Sorry! There is no breeds to show...</div>
   </div>
 </template>
 

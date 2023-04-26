@@ -1,16 +1,22 @@
 <template>
   <div class="cat-info-panel container">
-    <h1>{{ cat.name }}</h1>
-    <div class="cat-info-panel__img-holder">
+    <h1 v-if="cat.name">{{ cat.name }}</h1>
+    <div class="cat-info-panel__img-holder" v-if="cat.image">
       <img :src="cat.image" :alt="cat.name" />
     </div>
     <div class="cat-info-panel__description">
-      <h2>Origin</h2>
-      <p>{{ cat.origin }}</p>
-      <h2>Temperament</h2>
-      <p>{{ cat.temperament }}</p>
-      <h2>Description</h2>
-      <p>{{ cat.description }}</p>
+      <div v-if="cat.origin">
+        <h2>Origin</h2>
+        <p>{{ cat.origin }}</p>
+      </div>
+      <div v-if="cat.temperament">
+        <h2>Temperament</h2>
+        <p>{{ cat.temperament }}</p>
+      </div>
+      <div v-if="cat.description">
+        <h2>Description</h2>
+        <p>{{ cat.description }}</p>
+      </div>
     </div>
   </div>
 </template>

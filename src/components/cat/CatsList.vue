@@ -1,5 +1,5 @@
 <template>
-  <div class="cat-home-page__list">
+  <div class="cat-home-page__list" v-if="catItems">
     <div
       v-for="(item, index) in catItems"
       :key="index"
@@ -8,6 +8,7 @@
       <cat-teaser :cat="item" />
     </div>
   </div>
+  <div v-else>Sorry! Nothing to show :(</div>
 </template>
 
 <script lang="ts">

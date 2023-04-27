@@ -50,7 +50,7 @@ export default defineComponent({
         if (error instanceof Error) {
           toast.error(error.message);
         } else {
-          console.log("Unknown error occurred:", error);
+          toast.error("Unknown error occurred");
         }
       }
     };

@@ -8,7 +8,7 @@
     </div>
     <div
       v-if="items.length < totalImages && !isLoading && selectedBreed"
-      class="cat-home-page__loadmore"
+      class="cat-home-page__loadmore pt-5"
     >
       <button
         type="button"
@@ -113,8 +113,7 @@ export default defineComponent({
 <style lang="scss">
 #cat-home-page {
   .cat-home-page__loadmore {
-    text-align: left;
-    padding-top: 30px;
+    text-align: center;
   }
 }
 </style>

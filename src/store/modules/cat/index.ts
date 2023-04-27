@@ -5,7 +5,7 @@ import { CatBrowserState } from "@/store/modules/cat/types";
 
 const catService = new CatService();
 
-const ITEMS_PER_PAGE = 5;
+const ITEMS_PER_PAGE = 8;
 
 export const catModule = {
   state: (): CatBrowserState => ({

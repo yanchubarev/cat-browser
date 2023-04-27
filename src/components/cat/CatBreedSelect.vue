@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from "vue";
+import { computed, defineComponent, PropType, ref, watchEffect } from "vue";
 import { CatBreed } from "@/types/cat";
 import { useRoute } from "vue-router";
 
@@ -33,15 +33,27 @@ export default defineComponent({
   setup(props, { emit }) {
     const selectedBreed = ref<string>("");
     const route = useRoute();
+    const breeds = computed(() => props.breeds);
 
     const onSelectChange = () => {
       emit("selectChange", selectedBreed.value);
     };
 
-    // Check if the query already have a breed id
-    if (route.query.breedId) {
-      selectedBreed.value = route.query.breedId as string;
-    }
+    const selectBreed = () => {
+      // Synchronisation between route and select
+      if (
+        route.query.breedId &&
+        breeds.value.some((breed: CatBreed) => breed.id === route.query.breedId)
+      ) {
+        selectedBreed.value = route.query.breedId as string;
+      }
+    };
+
+    watchEffect(() => {
+      if (breeds.value.length) {
+        selectBreed();
+      }
+    });
 
     return {
       selectedBreed,

@@ -1,7 +1,16 @@
 <template>
-  <loader v-if="isLoading" />
-  <div v-if="cat && !isLoading">
-    <CatInfoPanel :cat="cat" />
+  <div>
+    <loader v-if="isLoading" />
+    <div v-if="cat && !isLoading">
+      <CatInfoPanel :cat="cat" />
+    </div>
+
+    <div class="mt-5" v-if="!cat && !isLoading">
+      <h2>It seems like there is an error while loading cat :(</h2>
+      <router-link :to="{ path: '/' }">
+        <button type="button" class="btn btn-outline-primary">Back</button>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -31,6 +40,7 @@ export default defineComponent({
       if (!route.params.breedId) {
         return;
       }
+      // Remove unnecessary fetching
       if (route.params.breedId === cat.value?.id) {
         return;
       }

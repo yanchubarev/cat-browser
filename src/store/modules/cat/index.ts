@@ -19,30 +19,38 @@ export const catModule = {
     loadedCatItem: null,
   }),
   mutations: {
+    // Set breeds in state
     SET_BREEDS(state: CatBrowserState, breeds: CatBreed[]) {
       state.breeds = breeds;
     },
+    // Set selected breed in state
     SET_SELECTED_BREED(state: CatBrowserState, breedId: string) {
       state.selectedBreed = breedId;
       state.page = 0; // reset page to 0 when breed is changed
     },
+    // Set cat items in state
     SET_ITEMS(state: CatBrowserState, items: CatImage[]) {
       state.items = items;
     },
+    // Set total number of cat images in state
     SET_TOTAL_IMAGES(state: CatBrowserState, totalImages: number) {
       state.totalImages = totalImages;
     },
+    // Set loading state in state
     SET_LOADING(state: CatBrowserState, isLoading: boolean) {
       state.isLoading = isLoading;
     },
+    // Set current page in state
     SET_PAGE(state: CatBrowserState, page: number) {
       state.page = page;
     },
+    // Set loaded cat item in state
     SET_LOADED_CAT_ITEM(state: CatBrowserState, catItem: CatInfo | null) {
       state.loadedCatItem = catItem;
     },
   },
   actions: {
+    // Fetch all cat breeds from service and commit to state
     async fetchBreeds({ commit }: { commit: Commit }) {
       commit("SET_LOADING", true);
       try {
@@ -54,6 +62,7 @@ export const catModule = {
         commit("SET_LOADING", false);
       }
     },
+    // Fetch cat items from service and commit to state
     async fetchCatItems(
       { state, commit }: { state: CatBrowserState; commit: Commit },
       payload?: { isLoadMore: boolean }
@@ -84,9 +93,11 @@ export const catModule = {
         commit("SET_LOADING", false);
       }
     },
+    // Set selected breed in state
     selectBreed({ commit }: { commit: Commit }, selectedBreedId: string) {
       commit("SET_SELECTED_BREED", selectedBreedId);
     },
+    // Fetch cat info by id
     async fetchCatById({ commit }: { commit: Commit }, catId: string) {
       commit("SET_LOADING", true);
       try {

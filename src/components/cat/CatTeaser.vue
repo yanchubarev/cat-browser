@@ -33,6 +33,7 @@ export default defineComponent({
 
     catImageElement.src = catImageUrl.value;
 
+    // Using new Image to control the image loading event
     catImageElement.onload = () => {
       catOptimisedImageUrl.value = catImageElement.src;
     };

@@ -1,5 +1,5 @@
 <template>
-  <div id="cat-home-page" class="container cat-home-page mt-5">
+  <div id="cat-home-page" class="container cat-home-page mt-5 mb-5">
     <h1>Cat browser</h1>
     <cat-breed-select :breeds="breeds" v-on:selectChange="handleSelectChange" />
     <loader v-if="isLoading" />
@@ -7,7 +7,7 @@
       <cats-list :cat-items="items" />
     </div>
     <div
-      v-if="items.length < totalImages && !isLoading"
+      v-if="items.length < totalImages && !isLoading && selectedBreed"
       class="cat-home-page__loadmore"
     >
       <button
@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, watchEffect } from "vue";
+import { computed, defineComponent, onMounted, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import CatsList from "@/components/cat/CatsList.vue";
@@ -69,9 +69,11 @@ export default defineComponent({
       fetchCatItems();
     };
 
-    if (route.query.breedId !== selectedBreed.value) {
-      handleSelectChange(route.query.breedId as string);
-    }
+    const checkRoute = () => {
+      if (route.query.breedId !== selectedBreed.value) {
+        handleSelectChange(route.query.breedId as string);
+      }
+    };
 
     const fetchBreeds = async () => {
       try {
@@ -89,6 +91,10 @@ export default defineComponent({
       if (!breeds.value.length) {
         fetchBreeds();
       }
+    });
+
+    onMounted(() => {
+      checkRoute();
     });
 
     return {

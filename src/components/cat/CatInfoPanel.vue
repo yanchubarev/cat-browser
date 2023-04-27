@@ -1,5 +1,5 @@
 <template>
-  <div class="cat-info-panel container mt-5">
+  <div class="cat-info-panel container mt-5 mb-5">
     <div class="cat-info-panel__heading row mb-3">
       <div class="col-md-auto mb-3 col-xs-12">
         <router-link :to="{ name: 'home', query: { breedId: cat.breed } }">
